@@ -1,0 +1,20 @@
+{
+    "name": "Site Unseen",
+    "version": "1.0.0",
+    "description": "Interact with any web page in the same way a person with blindness would experience it ",
+    "manifest_version": 3,
+    "author": "Simon Miner",
+    "homepage_url": "https://siteunseen.dev",
+    "content_scripts": [
+        {
+            "matches": ["https://*/*", "http://*/*"],
+            "js": ["site-unseen.min.js"]
+        }
+    ],
+    "icons": {
+        "16": "icon16.png",
+        "32": "icon32.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
