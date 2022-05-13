@@ -5,12 +5,14 @@
     "manifest_version": 3,
     "author": "Simon Miner",
     "homepage_url": "https://siteunseen.dev",
-    "content_scripts": [
-        {
-            "matches": ["https://*/*", "http://*/*"],
-            "js": ["site-unseen.min.js"]
-        }
+    "permissions": [
+        "activeTab",
+        "scripting"
     ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {},
     "icons": {
         "16": "icon16.png",
         "32": "icon32.png",
