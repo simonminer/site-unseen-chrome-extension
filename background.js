@@ -1,9 +1,8 @@
-// Inspired by:
-// https://stackoverflow.com/questions/16136275/how-to-make-on-off-buttons-icons-for-a-chrome-extension
+// Inspired by https://stackoverflow.com/questions/16136275.
 var isExtensionOn = false;
 
 function turnOffScreenReader () {
-    document._screenReader.overlay.hide();
+    document._screenReader.cleanUp();
 }
 
 chrome.action.onClicked.addListener((tab) => {
