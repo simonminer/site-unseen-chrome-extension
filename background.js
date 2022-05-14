@@ -9,13 +9,13 @@ chrome.action.onClicked.addListener((tab) => {
     isExtensionOn = !isExtensionOn;
 
     if (isExtensionOn) {
-        chrome.action.setIcon({
-            path: "icon16-on.png",
-            tabId:tab.id
-        });
         chrome.scripting.executeScript({
             target: { tabId: tab.id },
             files: ['site-unseen.min.js']
+        });
+        chrome.action.setIcon({
+            path: "icon16-on.png",
+            tabId:tab.id
         });
     }
     else {
@@ -29,3 +29,16 @@ chrome.action.onClicked.addListener((tab) => {
         });
     }
 });
+
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+    if (changeInfo.status == 'complete' && tab.active && isExtensionOn) {
+        chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ['site-unseen.min.js']
+        });
+        chrome.action.setIcon({
+            path: "icon16-on.png",
+            tabId:tab.id
+        });
+    }
+})
