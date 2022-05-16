@@ -1,7 +1,11 @@
-/** Turn the extensino on and off when its icon is pressed.
+var isExtensionLoaded = false;
+var isExtensionOn = false;
+
+/**
+ * Turn the extensino on and off when its icon is pressed,
+ * loading it into memory on the first time
  * Inspired by https://stackoverflow.com/questions/16136275.
  */
-var isExtensionOn = false;
 chrome.action.onClicked.addListener((tab) => {
     isExtensionOn = !isExtensionOn;
 
@@ -13,45 +17,70 @@ chrome.action.onClicked.addListener((tab) => {
     }
 });
 
-/** Keep the extension turned on when the page is (re)loaded).
- * Inspired by https://stackoverflow.com/questions/6497548.
- */
+/**
+ * Make sure the extension is turned off when a new page loads.
+*/
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-    if (changeInfo.status == 'complete' && tab.active && isExtensionOn) {
-        turnOnExtension(tab);
+   if (changeInfo.status == 'complete' && tab.active && isExtensionOn) {
+        isExtensionOn = false;
+        toggleIcon(tab);
     }
-})
+});
 
 /**
  * Activate the extension and change its
  * icon to show it is enabled.
  */
+function setupScreenReader () {
+    if (document._screenReader !== undefined) {
+        document._screenReader.setup();
+    }
+}
 function turnOnExtension(tab) {
+    // Load the extension.
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ['site-unseen.min.js']
+    },
+    // Once loaded, turn the extension on.
+    () => {
+        isExtensionLoaded = true;
+        chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: setupScreenReader
+        });
     });
-    chrome.action.setIcon({
-        path: "icon16-on.png",
-        tabId:tab.id
-    });
+
+    // Switch the icon to show the extension is on.
+    isExtensionOn = true;
+    toggleIcon(tab);
 }
 
 /**
  * Deactivate the extension and change its
  * icon to show it is disabled.
  */
-function cleanUpScreenReader () {
-    document._screenReader.cleanUp();
+function teardownScreenReader () {
+    if (document._screenReader !== undefined) {
+        document._screenReader.teardown();
+    }
 }
 
 function turnOffExtension(tab) {
-    chrome.action.setIcon({
-        path: "icon16.png",
-        tabId:tab.id
-    });
+    // Switch the icon to show the extension is off.
+    isExtensionOn = false;
+    toggleIcon(tab);
+
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        func: cleanUpScreenReader
+        func: teardownScreenReader
+    });
+}
+
+function toggleIcon(tab) {
+    const icon = isExtensionOn === true ? 'icon16-on.png' : 'icon16.png';
+    chrome.action.setIcon({
+        path: icon,
+        tabId:tab.id
     });
 }
