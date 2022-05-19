@@ -1,7 +1,7 @@
 {
     "name": "Site Unseen",
     "version": "0.1.0",
-    "description": "A screen reader emulator that enables you to experience the web from the perspective of a person who is blind",
+    "description": "Eperience the web from the perspective of a person who is blind",
     "manifest_version": 3,
     "author": "Simon Miner",
     "homepage_url": "https://siteunseen.dev",
