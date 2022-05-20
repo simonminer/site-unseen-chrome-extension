@@ -1,6 +1,6 @@
 {
     "name": "Site Unseen",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A screen reader emulator that helps you understand how blind people use the web",
     "manifest_version": 3,
     "author": "Simon Miner",
